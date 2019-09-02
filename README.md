@@ -8,6 +8,6 @@ UCAS_Course_Download
     + bs4
     
 + Run Script 
-    + `$ python UCAS_Course_Download.py`
+    + `python UCAS_Course_Download.py`
     + Done
 
