@@ -1,17 +1,18 @@
 # -*- coding:utf8 -*-
 
-
 import requests
 import re
 from bs4 import BeautifulSoup
 import os
 import time
+import urllib.parse
 
 
 def file_download(url, fileName, className, session, folder):
 	dir_base = os.getcwd() + "/" + className
 	dir = dir_base + "/"  + folder
 	file = dir + fileName
+	file = urllib.parse.unquote(file)
 	# create folder
 	if not os.path.exists(dir_base):
 		os.mkdir(dir_base)
@@ -77,8 +78,12 @@ if __name__ == '__main__':
 
 		newUrl = bsObj.find("noscript").meta.get("content")[6:]
 		s = session.get(newUrl)
-		bsObj = BeautifulSoup(s.text, "html.parser").find("a", {"class": "Mrphs-toolsNav__menuitem--link ","title":"我的课程 - 查看或加入站点"})
-		newUrl = bsObj.get("href")
+		try:
+			bsObj = BeautifulSoup(s.text, "html.parser").find("a", {"class": "Mrphs-toolsNav__menuitem--link ","title":"我的课程 - 查看或加入站点"})
+			newUrl = bsObj.get("href")
+		except:
+			bsObj = BeautifulSoup(s.text, "html.parser").find("a", {"class": "Mrphs-toolsNav__menuitem--link ","title":"&#25105;&#30340;&#35838;&#31243; - 查看或加入站点"})
+			newUrl = bsObj.get("href")
 		s = session.get(newUrl)
 		classList = []
 		trList = BeautifulSoup(s.text, "html.parser").findAll("tr")
