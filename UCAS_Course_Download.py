@@ -11,6 +11,7 @@ import urllib.parse
 def file_download(url, fileName, className, session, folder):
 	dir_base = os.getcwd() + "/" + className
 	dir = dir_base + "/"  + folder
+	dir = urllib.parse.unquote(dir)
 	file = dir + fileName
 	file = urllib.parse.unquote(file)
 	# create folder
