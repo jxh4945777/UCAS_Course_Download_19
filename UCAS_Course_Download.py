@@ -1,5 +1,4 @@
 # -*- coding:utf8 -*-
-
 import requests
 import re
 from bs4 import BeautifulSoup
@@ -58,8 +57,15 @@ def getClass(currentClass, url, session, data, base_url):
 		getClass(currentClass, next_url, session, data, base_url)
 
 if __name__ == '__main__':
-	username = input("Please input your username: ")
-	password = input("Please input your password: ")
+	username = ''
+	password = ''
+	id_flag = 0
+	for line in open("./config.txt",encoding="utf-8"):
+		if id_flag == 0:
+			username = line.replace("\n","").replace(" ","")
+			id_flag = 1
+		else:
+			password = line.replace("\n","").replace(" ","")
 	print("Your Login ID：" + username)
 	try:
 		session = requests.Session()
@@ -86,7 +92,7 @@ if __name__ == '__main__':
 			bsObj = BeautifulSoup(s.text, "html.parser").find("a", {"class": "Mrphs-toolsNav__menuitem--link ","title":"我的课程 - 查看或加入站点"})
 			newUrl = bsObj.get("href")
 		except:
-			bsObj = BeautifulSoup(s.text, "html.parser").find("a", {"class": "Mrphs-toolsNav__menuitem--link ","title":"&#25105;&#30340;&#35838;&#31243; - 查看或加入站点"})
+			bsObj = BeautifulSoup(s.text, "html.parser").find_all("a", {"class": "Mrphs-toolsNav__menuitem--link "})[2]
 			newUrl = bsObj.get("href")
 		s = session.get(newUrl)
 		classList = []
