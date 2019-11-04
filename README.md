@@ -1,11 +1,11 @@
 # UCAS_Course_Download_19
 UCAS_Course_Download_19
 # Config File
-Extra text file config.txt is needed:
-The first line is your user account
-The second line is your password
-XXXXXX@XXX.com
-XXXXXXXX
+Extra text file config.txt is needed:\n
+The first line is your user account\n
+The second line is your password\n
+XXXXXX@XXX.com\n
+XXXXXXXX\n
 
 # Usage
 + Requirement
