@@ -89,10 +89,10 @@ if __name__ == '__main__':
 		newUrl = bsObj.find("noscript").meta.get("content")[6:]
 		s = session.get(newUrl)
 		try:
-			bsObj = BeautifulSoup(s.text, "html.parser").find("a", {"class": "Mrphs-toolsNav__menuitem--link ","title":"我的课程 - 查看或加入站点"})
+			bsObj = BeautifulSoup(s.text, "html.parser").find("a", {"class": "Mrphs-toolsNav__menuitem--link","title":"我的课程 - 查看或加入站点"})
 			newUrl = bsObj.get("href")
 		except:
-			bsObj = BeautifulSoup(s.text, "html.parser").find_all("a", {"class": "Mrphs-toolsNav__menuitem--link "})[2]
+			bsObj = BeautifulSoup(s.text, "html.parser").find_all("a", {"class": "Mrphs-toolsNav__menuitem--link"})[2]
 			newUrl = bsObj.get("href")
 		s = session.get(newUrl)
 		classList = []
