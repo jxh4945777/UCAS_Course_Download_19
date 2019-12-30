@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 import os
 import time
 import urllib.parse
-
+import json
 
 def file_download(url, fileName, className, session, folder):
    dir_base = os.getcwd() + "/" + className
@@ -68,20 +68,39 @@ if __name__ == '__main__':
 			password = line.replace("\n","").replace(" ","")
 	print("Your Login ID：" + username)
 	try:
-		session = requests.Session()
-		s = session.get(
-			"http://sep.ucas.ac.cn/slogin?userName=" + username + "&pwd=" + password + "&sb=sb&rememberMe=1");
-		bsObj = BeautifulSoup(s.text, "html.parser")
-		nameTag = bsObj.find("li", {"class": "btnav-info", "title": "当前用户所在单位"})
-		if nameTag == None:
-			errorExit("Login Failed")
-		name = nameTag.get_text()
-		match = re.compile(r"\s*(\S*)\s*(\S*)\s*").match(name)
-		if (match):
-			name = match.group(2)
-			print("Welcome," + name)
+		onestop_data = {'username': '',  # 填入用户名
+		                'password': '',  # 填入密码
+		                'remember': 'checked'}
+		onestop_data['username'] = username
+		onestop_data['password'] = password
+		# ------------------- login onestop -------------------------
+		onestop_link = "http://onestop.ucas.ac.cn/Ajax/Login/0"
+
+		headers = {  # 请求头信息
+			'X-Requested-With': 'XMLHttpRequest'
+		}
+
+		o = requests.Session()
+		Onestop_Login = o.post(url=onestop_link, data=onestop_data, headers=headers, verify=False, timeout=10)
+		res = json.loads(Onestop_Login.text)
+
+		if (res['f'] == False):  # check login status
+			raise Exception(res['msg'])
 		else:
-			errorExit("Login failed")
+			print("Welcome, {}".format(onestop_data['username']))
+		# -------------------------------------------------------
+
+		# ------------------- login sep -------------------------
+		s = requests.Session()
+		Sep_Login = s.get(url=res['msg'], verify=False, timeout=10)  # login
+		sl = BeautifulSoup(Sep_Login.text, 'lxml')
+
+		if (sl.find('a', title='退出系统') == None):  # check login status
+			raise Exception("Sep Login Error")
+		else:
+			print("SEP LOGIN SUCCESS")
+		session = s
+		# -------------------------------------------------------
 
 		s = session.get("http://sep.ucas.ac.cn/portal/site/16/801")
 		bsObj = BeautifulSoup(s.text, "html.parser")
