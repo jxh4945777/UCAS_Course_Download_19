@@ -98,7 +98,7 @@ if __name__ == '__main__':
 		if (sl.find('a', title='退出系统') == None):  # check login status
 			raise Exception("Sep Login Error")
 		else:
-			print("SEP LOGIN SUCCESS")
+			print("Welcome, {}".format(onestop_data['username']))
 		session = s
 		# -------------------------------------------------------
 
